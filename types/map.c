@@ -57,6 +57,15 @@ void map_change_size(map_t* map, int nsize){
     free(otable);
 }
 
+int fast_strcmp(char* s1, char* s2){
+    for(int i = 0; s1[i] != 0 && s2[i] != 0; i++){
+        if(s1[i] != s2[i])
+            return 0;
+    }
+
+    return -1;
+}
+
 int map_author_exist(char** list, int s, char* author){
     for(int i = 0; i < s; i++){
         if(strcmp(list[i], author) == 0){
@@ -77,7 +86,8 @@ int map_count_author(map_t* map){
         elem = map->table[i];
         while(elem != NULL){
             if(map_author_exist(author_list, count, elem->music->author) == -1){
-                printf("%d: (%d) %s\n", count, i, elem->music->author);
+                if(count % 1000 == 0) 
+                    printf("%d: (%d) %s\n", count, i, elem->music->author);
                 author_list = realloc(author_list, (count+1) * sizeof(char*));
                 author_list[count++] = elem->music->author;
             }
