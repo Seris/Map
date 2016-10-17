@@ -70,8 +70,7 @@ int map_author_exist(char** list, int s, char* author){
 int map_count_author(map_t* map){
     int count = 0;
     int i = 0;
-    int max_elem = 10;
-    char** author_list = malloc(max_elem * sizeof(char*));
+    char** author_list = malloc(sizeof(char*) * map->elem_count);
     clist_t* elem;
 
     for(int i = 0; i < map->table_size; i++){
@@ -79,10 +78,6 @@ int map_count_author(map_t* map){
         while(elem != NULL){
             if(map_author_exist(author_list, count, elem->music->author) == -1){
                 author_list[count++] = elem->music->author;
-                if(count == max_elem){
-                    max_elem *= 2;
-                    author_list = realloc(author_list, max_elem * sizeof(char*));
-                }
             }
             clist_next(&elem);
         }
