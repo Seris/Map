@@ -10,6 +10,7 @@ typedef struct clist_st {
 
 #define     clist_new_empty() (clist_t*) NULL
 clist_t*    clist_push(clist_t** list, music_t* music);
+clist_t*    clist_unshift(clist_t** list, music_t* music);
 int         clist_pop(clist_t** list, music_t** music);
 int         clist_shift(clist_t** list, music_t** music);
 int         clist_next(clist_t** list);

@@ -19,6 +19,17 @@ clist_t* clist_push(clist_t** head_ptr, music_t* music){
     return new;
 }
 
+clist_t* clist_unshift(clist_t** head_ptr, music_t* music){
+    clist_t* head = *head_ptr;
+    clist_t* new = malloc(sizeof(clist_t));
+
+    new->next = *head_ptr;
+    new->music = music;
+
+    *head_ptr = new;
+    return new;
+}
+
 int clist_pop(clist_t** head_ptr, music_t** music){
     clist_t* head = *head_ptr;
     int deleted = -1;

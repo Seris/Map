@@ -62,6 +62,8 @@ int main(int argc, char* argv[]){
         }
     }
 
+    map_show_stack(map);
+
 
     printf("freeing...");
     for(int i = 0; i < count; i++){

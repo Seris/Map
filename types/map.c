@@ -45,7 +45,7 @@ void map_change_size(map_t* map, int nsize){
     map->elem_count = 0;
 
     for(int i = 0; i < osize; i++){
-        while(clist_pop(&otable[i], &music) == 0){
+        while(clist_shift(&otable[i], &music) == 0){
             map_set(map, music);
         }
     }
@@ -87,7 +87,7 @@ int map_set(map_t* map, music_t* music){
 
     if(map_get(map, music->title, NULL) != 0){
         pos = map_default_hash(map, music->title);
-        clist_push(&map->table[pos], music);
+        clist_unshift(&map->table[pos], music);
         map->elem_count++;
         return 0;
     } else {
