@@ -62,8 +62,7 @@ int main(int argc, char* argv[]){
         }
     }
 
-    map_show_stack(map);
-
+    printf("number of artists: %d\n", map_count_author(map));
 
     printf("freeing...");
     for(int i = 0; i < count; i++){

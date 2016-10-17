@@ -19,6 +19,7 @@ int     map_unset(map_t* map, char* title, music_t** music);
 int     map_delete(map_t* map);
 void    map_resize_to_fit(map_t* map);
 
+int map_count_author(map_t* map);
 void    map_show_stack(map_t* map);
 
 #endif // MUSIC_TYPES_MAP_H

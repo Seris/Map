@@ -57,6 +57,44 @@ void map_change_size(map_t* map, int nsize){
     free(otable);
 }
 
+int map_author_exist(char** list, int s, char* author){
+    for(int i = 0; i < s; i++){
+        if(strcmp(list[i], author) == 0){
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+int map_count_author(map_t* map){
+    int count = 0;
+    int i = 0;
+    int buf_size = 10;
+    char** author_list = malloc(0);
+    clist_t* elem;
+
+    do {
+        author_list = realloc(author_list, buf_size);
+
+        for(; i < map->table_size && count < buf_size; i++){
+            elem = map->table[i];
+            while(elem != NULL){
+                if(map_author_exist(author_list, count, elem->music->author) == -1){
+                   author_list[count++] = elem->music->author; 
+                }
+                clist_next(&elem);
+            }
+        }
+
+        buf_size *= 2;
+    } while(i < map->table_size);
+
+    free(author_list);
+
+    return count;
+}
+
 void map_resize_to_fit(map_t* map){
     int nsize = map->elem_count;
     if(nsize == 0) nsize = 1;
