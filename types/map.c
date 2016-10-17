@@ -69,12 +69,12 @@ int map_author_exist(char** list, int s, char* author){
 
 int map_count_author(map_t* map){
     int count = 0;
-    int i = 0;
     char** author_list = malloc(sizeof(char*) * map->elem_count);
     clist_t* elem;
 
     for(int i = 0; i < map->table_size; i++){
         elem = map->table[i];
+        printf("%d: %p\n", i, elem);
         while(elem != NULL){
             if(map_author_exist(author_list, count, elem->music->author) == -1){
                 author_list[count++] = elem->music->author;
