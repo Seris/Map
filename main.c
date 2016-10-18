@@ -6,22 +6,21 @@
 #include <types/mlist.h>
 #include <music.h>
 
-int load_database(char* file, music_t** db){
+music_t* load_database(char* file, int* n){
+    music_t* db = malloc(1);
     FILE* db_fd = fopen(file, "r"); 
-    *db = malloc(0);
     char** cursor;
-
-    int max_elem = 10, count = 0;
     char* line;
-    int ret = 0;
+    int max_elem = 10, count = 0;
+    int ret = !EOF;
  
     do {
-        *db = realloc(*db, max_elem * sizeof(music_t));
+        db = realloc(db, max_elem * sizeof(music_t));
         for(; count < max_elem && ret != EOF; count++){
             ret = fscanf(db_fd, "%m[^\n]", &line);
             fseek(db_fd, 1, SEEK_CUR);
 
-            cursor = (char**) &(*db)[count];
+            cursor = (char**) &db[count];
             cursor[0] = strtok(line, "|");
             for(int i = 1; i < 5; i++){
                cursor[i] = strtok(NULL, "|");
@@ -33,10 +32,12 @@ int load_database(char* file, music_t** db){
 
     fclose(db_fd);
 
-    *db = realloc(*db, --count * sizeof(music_t));
+    db = realloc(db, --count * sizeof(music_t));
+    if(n != NULL) *n = count;
 
-    return count;
+    return db;
 }
+
 
 void free_database(music_t* db, int size){
     for(int i = 0; i< size; i++){
@@ -44,6 +45,7 @@ void free_database(music_t* db, int size){
     }
     free(db);
 }
+
 
 int count_artist(map_t* db){
     mlist_t* elem;
@@ -55,9 +57,7 @@ int count_artist(map_t* db){
         elem = db->table[i];
         while(elem != NULL){
             music = (music_t*) elem->value;
-            if(map_set(artist, music->author, artist)){
-                printf("%s|%s\n", music->author, music->title);
-            }
+            map_set(artist, music->author, artist);
             elem = elem->next;
         }
     }
@@ -69,17 +69,18 @@ int count_artist(map_t* db){
 }
 
 int main(int argc, char* argv[]){
+    int elem;
     map_t* map = map_new();
-    music_t* database;
-    int elem = load_database("./database", &database);
-    // printf("successfully loaded %d elements\n", elem);
+    music_t* database = load_database("./database", &elem);
+
+    printf("successfully loaded %d elements\n", elem);
 
     for(int i = 0; i < elem; i++){
         map_set(map, database[i].title, &database[i]);         
     }
-    // printf("map loaded\n");
+    printf("map loaded\n");
 
-    count_artist(map);
+    printf("%d artists found\n", count_artist(map));
 
     map_del(map);
 
