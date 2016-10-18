@@ -1,0 +1,5 @@
+music
+databases/*
+!databases/test.dat
+*.swp
+**/*.swp

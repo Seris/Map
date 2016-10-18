@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <assert_malloc.h>
+#include <types/map.h>
+#include <types/mlist.h>
+
+map_t* map_new(void){
+    map_t* map = malloc(sizeof(map_t));
+    assert_malloc(map, "map");
+
+    map->table = NULL;
+    map->table_size = 0;
+    map->load_factor = 0;
+    map->max_load_factor = 0.75;
+
+    map_set_table_size(map, 20);
+
+    return map;
+}
+
+
+int map_del(map_t* map){
+    for(int i = 0; i < map->table_size; i++){
+        while(mlist_rem(&map->table[i], NULL) != NULL);
+    }
+    free(map->table);
+    free(map);
+
+    return 1;
+}
+
+
+int map_set(map_t* map, char* key, void* value){
+    int pos;
+    int ret = 0;
+
+    if(value != NULL && map_get(map, key) == NULL){
+        pos = map_default_hash(key, map->table_size);
+        mlist_add(&map->table[pos], key, value);
+        map->elem_count++;
+
+        map->load_factor = map->elem_count / map->table_size;
+
+        if(map->load_factor > map->max_load_factor){
+            map_set_table_size(map, (float) map->table_size * 1.2 + 1);
+        }
+
+        ret = 1;
+    }
+
+    return ret;
+}
+
+
+void* map_get(map_t* map, char* key){
+    int pos = map_default_hash(key, map->table_size);
+    void* value = NULL;
+
+    mlist_t* elem = map->table[pos];
+    while(value == NULL && elem != NULL){
+        if(strcmp(elem->key, key) == 0){
+            value = elem->value;
+        } else {
+            elem = elem->next;
+        }
+    }
+
+    return value;
+}
+
+
+int map_default_hash(char* key, int modulo){
+    int h1 = 0xffff0000,
+        h2 = 0x12ae13fa,
+        h3 = 0x87d5a7bb;
+
+    for(int i = 0; key[i] != 0; i++){
+        h3 += (h1 * i) << (key[i] % 8);
+        h2 += (h3 * i + h1 + key[i]);
+        h1 += (h2 & 0xffff0000 + h3 & 0xffff) * (h2 - key[i] * i);
+    }
+
+    h1 += (h2 - h3);
+    if(h1 < 0) h1 *= -1;
+
+    return h1 % modulo;
+}
+
+
+int map_set_table_size(map_t* map, int nsize){
+    char *key;
+    void *value;
+
+    int osize = map->table_size;
+    mlist_t** otable = map->table;
+
+    map->table = calloc(nsize, sizeof(mlist_t*));
+    assert_malloc(map->table, "new hash table for map");
+
+    map->load_factor = 0;
+    map->elem_count = 0;
+    map->table_size = nsize;
+
+    for(int i = 0; i < osize; i++){
+        while((value = mlist_rem(&otable[i], &key)) != NULL){
+           map_set(map, key, value);
+        }
+    }
+
+    free(otable);
+
+    return 1;
+}
+
