@@ -83,5 +83,6 @@ void hash_destructor(char* key, void* m){
     free(music->label);
     free(music->date);
     free(music->style);
+    free(music);
 }
 
