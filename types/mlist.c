@@ -1,19 +1,24 @@
 #include <stdlib.h>
+#include <string.h>
+
 #include <types/mlist.h>
 #include <assert_malloc.h>
 
 int mlist_add(mlist_t** head_ptr, char* key, void* value){
+    int status = 0;
     mlist_t* head = *head_ptr;
     mlist_t* new = malloc(sizeof(mlist_t));
     assert_malloc(new, "new list");
 
-    new->key = key;
-    new->value = value;
-    new->next = head;
+    if(value != NULL){
+        new->key = key;
+        new->value = value;
+        new->next = head;
+        *head_ptr = new;
+        status = 1;
+    }
 
-    *head_ptr = new;
-
-    return 1;
+    return status;
 }
 
 void* mlist_rem(mlist_t** head_ptr, char** key){
@@ -43,5 +48,16 @@ int mlist_merge(mlist_t** head_ptr, mlist_t* tail){
     }
 
     return 1;
+}
+
+int mlist_key_exist(mlist_t* head, char* key){
+    int status = 0;
+    while(head != NULL && !status){
+        if(head->key != NULL){
+            status = (strcmp(key, head->key) == 0);
+        }
+        head = head->next;
+    }
+    return status;
 }
 
