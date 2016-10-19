@@ -44,7 +44,7 @@ void arbre_afficher_rec(Discotheque dvoid, int profondeur)
 }
 
 /*
- * Fonction : creer_discotheque_vide
+ * Fonction : creer_discotheque
  *            Crée une discothèque vide. Et valide.
  *
  * Retourne : le pointeur nul. Qui correspond à une discothèque vide avec cette implémentation.
@@ -54,7 +54,7 @@ Discotheque arbre_creer_discotheque(){
 }
 
 
-/* Fonction : creer_discotheque
+/* Fonction : creer_noeud
  *            Crée une discotheque correspondant à un seul album aux caractéristiques données en paramètres
  *
  * Arguments : titre - Un pointeur vers une chaîne de caractères correspondant au titre de l'album
@@ -69,15 +69,15 @@ Discotheque arbre_creer_discotheque(){
  */
 Discotheque arbre_creer_noeud(char * titre, char * interprete, char * label, char * date, char * style, Discotheque f_g, Discotheque f_d)
 {
-    struct NoeudSt * d = (struct NoeudSt *)malloc(sizeof(struct NoeudSt));
+    struct NoeudSt * d = (struct NoeudSt *) malloc(sizeof(struct NoeudSt));
 
-    d->date = date;
-    d->fils_g = f_g;
-    d->fils_d = f_d;
-    d->titre = titre;
-    d->interprete = interprete;
-    d->label = label;
-    d->style = style;
+    d->fils_g       = f_g;
+    d->fils_d       = f_d;
+    d->titre        = strdup(titre);
+    d->interprete   = strdup(interprete);
+    d->label        = strdup(label);
+    d->date         = strdup(date);
+    d->style        = strdup(style);
 
     return d;
 }
@@ -96,7 +96,7 @@ Discotheque arbre_creer_noeud(char * titre, char * interprete, char * label, cha
  *
  * Retourne : La discothèque dans laquelle l'album a été inséré
  */
-Discotheque arbre_inserer(Discotheque dvoid, char * titre, char * interprete, char * label, char * date, char * style)
+Discotheque arbre_inserer(Discotheque dvoid, Titre titre, Interprete interprete, Label label, Date date, Style style)
 {
     struct NoeudSt * d = (struct NoeudSt *)dvoid;
 
@@ -246,8 +246,6 @@ int arbre_compter_interpretes_rec(Discotheque dvoid, mlist_t** pl, int * pIncr)
     }
 
     (*pIncr)++;
-    if(*pIncr % 100 == 0)
-        printf("Analyse : %d lignes.\n", *pIncr);
     
     return nb;
 }
@@ -261,17 +259,11 @@ void arbre_detruire_discotheque(Discotheque dvoid)
 {
     struct NoeudSt * d = (struct NoeudSt *)dvoid;
 
-    if(d == NULL)
-        return;
-
-    arbre_detruire_discotheque(d->fils_g);
-    arbre_detruire_discotheque(d->fils_d);
-    free(d->titre);
-    free(d->interprete);
-    free(d->label);
-    free(d->date);
-    free(d->style);
-    free(d);
+    if(d != NULL){
+        arbre_detruire_discotheque(d->fils_g);
+        arbre_detruire_discotheque(d->fils_d);
+        arbre_detruire_album(d);
+    }
 }
 
 /* Fonction : detruire_album

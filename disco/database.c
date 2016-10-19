@@ -20,7 +20,7 @@ Discotheque creer_discotheque_fichier(char* file){
             music.date   = strtok(NULL, "|");
             music.style  = strtok(NULL, "|");
 
-            inserer(d,
+            d = inserer(d,
                 music.title,
                 music.author,
                 music.label,

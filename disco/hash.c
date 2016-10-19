@@ -53,6 +53,11 @@ Discotheque hash_rechercher(Discotheque d, Titre t){
 }
 
 
+void hash_afficher(Discotheque d){
+
+}
+
+
 int hash_compter_interpretes(Discotheque d){
     map_t* disco = (map_t*) d;
     map_t* authors = map_new(0);
