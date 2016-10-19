@@ -3,3 +3,4 @@ databases/*
 !databases/test.dat
 *.sw*
 **/*.sw*
+*vgcore*

@@ -82,6 +82,29 @@ void* map_get(map_t* map, char* key){
 }
 
 
+void* map_unset(map_t* map, char* key){
+    int pos = map_default_hash(key, map->table_size);
+    void* value = NULL;
+
+    mlist_t *child = map->table[pos];
+    mlist_t *parent = NULL;
+    while(value == NULL && child != NULL){
+        if(strcmp(key, child->key) == 0){
+            value = child->value;
+            if(parent != NULL){
+                parent->next = child->next;
+            }
+            free(child);
+        } else {
+            parent = child;
+            child = child->next;
+        }
+    }
+
+    return value;
+}
+
+
 int map_default_hash(char* key, int modulo){
     int h1 = 0xffff0000,
         h2 = 0x12ae13fa,
