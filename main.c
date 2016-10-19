@@ -5,12 +5,14 @@
 #include <types/disco.h>
 
 int main(int argc, char* argv[]){
+    discotheque_methode(METHODE_HASH);
+   
     Discotheque d = creer_discotheque_fichier("./database");
     printf("Discothèque chargée D:\n");
 
-    printf("%d artist\n", hash_compter_interpretes(d));
+    printf("%d artist\n", compter_interpretes(d));
 
-    hash_detruire_discotheque(d);
+    detruire_discotheque(d);
 
     return EXIT_SUCCESS;
 }

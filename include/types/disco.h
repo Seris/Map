@@ -12,6 +12,11 @@ typedef struct {
     Style       style;
 } music_t;
 
+typedef enum {
+    METHODE_HASH,
+    METHODE_ARBRE,
+    METHODE_LISTE
+} methode_t;
 
 /**
  * Discotheque Prototypes
@@ -23,7 +28,7 @@ extern  Discotheque (*supprimer)(Discotheque, Titre);
 extern  Discotheque (*rechercher)(Discotheque, Titre);
 extern  int         (*compter_interpretes)(Discotheque);
 extern  void        (*afficher)(Discotheque);
-extern  void        (*detruire_discotheque)(Discoteque);
+extern  void        (*detruire_discotheque)(Discotheque);
 
 /**
  * Hash Table Prototypes
