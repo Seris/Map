@@ -76,7 +76,8 @@ int saisieNb(const char* prompt){
 void lancer_interface(){
     int implementation = 0;
 
-    printf("Quel mode d'implementation utiliser ?\n"
+    effEcr();
+    printf("Implémentation de la discothèque:\n"
            "1. Listes chainees\n"
            "2. Arbres binaires de recherche\n"  
            "3. Tables de hachage\n");
@@ -113,8 +114,9 @@ void lancer_interface(){
         do {
             choix = saisieNb(">");
         } while(choix <= 0 || choix > 10);
-        printf("\n");
 
+        effEcr();
+ 
         switch(choix) {
             case 1:
             printf("Affichage de la discothèque: \n");
@@ -124,6 +126,7 @@ void lancer_interface(){
             case 2:
             saisie("Chemin vers le fichier:", buffer, 100);
             printf("Chargement du fichier... ");
+            fflush(stdout);
             if(charger_discotheque_fichier(buffer, &d)){
                 printf("Terminé\n");
             } else {
