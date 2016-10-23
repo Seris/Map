@@ -110,7 +110,12 @@ int hash_compter_interpretes(Discotheque d){
     return count;
 }
 
-
+/**
+ * hash_destructor
+ * @desc La fonction qui détruit les musiques quand on détruit la map
+ * @param <char* key>
+ * @param <void* m>
+ **/
 void hash_destructor(char* key, void* m){
     music_t* music = (music_t*) m;
     if(music->title != key){
@@ -125,11 +130,8 @@ void hash_destructor(char* key, void* m){
 }
 
 void hash_display_music(music_t* music){
-    printf("%s :\n", music->title);
-    printf("* Interprete: %s\n", music->author);
-    printf("* Label:      %s\n", music->label);
-    printf("* Style:      %s\n", music->style);
-    printf("* Date:       %s\n", music->date);
+    printf("%s | %s | %s | %s | %s\n",
+        music->title, music->author, music->label, music->date, music->style);
 }
 
 

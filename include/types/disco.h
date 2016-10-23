@@ -21,7 +21,7 @@ typedef enum {
 /**
  * Discotheque Prototypes
  */
-int                 charger_discotheque_fichier(char*, Discotheque*);
+int                 charger_discotheque_fichier(const char*, Discotheque*);
 int                 discotheque_methode(methode_t);
 extern  Discotheque (*creer_discotheque)(void);
 extern  Discotheque (*inserer)(Discotheque, Titre, Interprete, Label, Date, Style);
