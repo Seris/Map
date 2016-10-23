@@ -6,21 +6,19 @@
 #include <types/mlist.h>
 #include <types/disco.h>
 
-/* Fonction : afficher
- *            Affiche de manière infixe la discothèque
- *
- * Arguments : dvoid - La discothèque à afficher
+/* afficher
+ * @brief Affiche de manière infixe la discothèque
+ * @param dvoid La discothèque à afficher
  */
 void arbre_afficher(Discotheque dvoid)
 {
     arbre_afficher_rec(dvoid, 0);
 }
 
-/* Fonction : afficher_rec
- *            Affiche de manière infixe la discothèque. Est codée pour fonctionner récursivement.
- *
- * Arguments : dvoid - La discothèque à afficher
-               profondeur - La différence de niveau par rapport à celui de la racine
+/* afficher_rec
+ * @brief Affiche de manière infixe la discothèque. Est codée pour fonctionner récursivement.
+ * @param dvoid La discothèque à afficher
+ * @param profondeur La différence de niveau par rapport à celui de la racine
  */
 void arbre_afficher_rec(Discotheque dvoid, int profondeur)
 {
@@ -43,29 +41,28 @@ void arbre_afficher_rec(Discotheque dvoid, int profondeur)
     return;
 }
 
-/*
- * Fonction : creer_discotheque
- *            Crée une discothèque vide. Et valide.
- *
- * Retourne : le pointeur nul. Qui correspond à une discothèque vide avec cette implémentation.
+/* creer_discotheque
+ * @brief Crée une discothèque vide. Et valide.
+ * @pre Aucune
+ * @post Crée une dicothèque fonctionnelle
+ * @invariant Aucun
+ * @return Le pointeur nul. Qui correspond à une discothèque vide avec cette implémentation.
  */
 Discotheque arbre_creer_discotheque(){
     return NULL;
 }
 
 
-/* Fonction : creer_noeud
- *            Crée une discotheque correspondant à un seul album aux caractéristiques données en paramètres
- *
- * Arguments : titre - Un pointeur vers une chaîne de caractères correspondant au titre de l'album
- *             interprete - Un pointeur vers une chaîne de caractères correspondant à l'interprête de l'album
- *             label - Un pointeur vers une chaîne de caractères correspondant au label de l'album
- *             date - Un pointeur vers une chaîne de caractères correspondant à la date de sortie de l'album
- *             style - Un pointeur vers une chaîne de caractères correspondant au style de l'album
- *             f_g - Une discothèque à placer en tant qu'enfant à gauche de la discothèque créée, dans le cadre de l'arbre binaire de recherche
- *             f_d - Une discothèque à placer en tant qu'enfant à droite de la discothèque créée, dans le cadre de l'arbre binaire de recherche
- *
- * Retourne : La discothèque créée contenant l'album.
+/* creer_noeud
+ * @brief Crée une discotheque correspondant à un seul album aux caractéristiques données en paramètres
+ * @param titre Un pointeur vers une chaîne de caractères correspondant au titre de l'album
+ * @param interprete Un pointeur vers une chaîne de caractères correspondant à l'interprête de l'album
+ * @param label Un pointeur vers une chaîne de caractères correspondant au label de l'album
+ * @param date Un pointeur vers une chaîne de caractères correspondant à la date de sortie de l'album
+ * @param style Un pointeur vers une chaîne de caractères correspondant au style de l'album
+ * @param f_g Une discothèque à placer en tant qu'enfant à gauche de la discothèque créée, dans le cadre de l'arbre binaire de recherche
+ * @param f_d Une discothèque à placer en tant qu'enfant à droite de la discothèque créée, dans le cadre de l'arbre binaire de recherche
+ * @return La discothèque créée contenant l'album
  */
 Discotheque arbre_creer_noeud(char * titre, char * interprete, char * label, char * date, char * style, Discotheque f_g, Discotheque f_d)
 {
@@ -83,18 +80,18 @@ Discotheque arbre_creer_noeud(char * titre, char * interprete, char * label, cha
 }
 
 /*
- * Fonction : inserer
- *            Place de manière optimisée l'album passé en paramètre dans la discothèque, et renvoie la discothèque ainsi modifiée.
-              Attention, les chaines de caractères ne sont pas dupliquées, les pointeurs sont entrés tels quels dans la discothèque.
- *
- * Arguments : dvoid - La discothèque dans laquelle la fonction doit insérer l'album. Attention, la fonction ne duplique pas la discothèque initiale. Ainsi, parfois elle restera inchangée, parfois non.
- *             titre - Un pointeur vers une chaîne de caractères correspondant au titre de l'album
- *             interprete - Un pointeur vers une chaîne de caractères correspondant à l'interprête de l'album
- *             label - Un pointeur vers une chaîne de caractères correspondant au label de l'album
- *             date - Un pointeur vers une chaîne de caractères correspondant à la date de sortie de l'album
- *             style - Un pointeur vers une chaîne de caractères correspondant au style de l'album
- *
- * Retourne : La discothèque dans laquelle l'album a été inséré
+ * inserer
+ * @brief Place de manière optimisée l'album passé en paramètre dans la discothèque, et renvoie la discothèque ainsi modifiée.
+ * @pre disco, t, i, l, d et s doivent être dans des formats valides. Il ne doit pas déjà y avoir un album de titre t dans disco.
+ * @post Retourne une discothèque fonctionnalle contenant le nouvel album
+ * @invariant Les autres albums contenus dans disco ne changent pas.
+ * @param dvoid La discothèque dans laquelle la fonction doit insérer l'album. Attention, la fonction ne duplique pas la discothèque initiale. Ainsi, parfois elle restera inchangée, parfois non.
+ * @param titre Un pointeur vers une chaîne de caractères correspondant au titre de l'album
+ * @param interprete Un pointeur vers une chaîne de caractères correspondant à l'interprête de l'album
+ * @param label Un pointeur vers une chaîne de caractères correspondant au label de l'album
+ * @param date Un pointeur vers une chaîne de caractères correspondant à la date de sortie de l'album
+ * @param style Un pointeur vers une chaîne de caractères correspondant au style de l'album
+ * @return La discothèque dans laquelle l'album a été inséré
  */
 Discotheque arbre_inserer(Discotheque dvoid, Titre titre, Interprete interprete, Label label, Date date, Style style)
 {
@@ -102,7 +99,7 @@ Discotheque arbre_inserer(Discotheque dvoid, Titre titre, Interprete interprete,
 
     if(d == NULL)
     {
-        return arbre_creer_noeud(titre, interprete, label, date, style, NULL, NULL); // Toujours une feuille
+        return arbre_creer_noeud(titre, interprete, label, date, style, NULL, NULL); // L'album créé est toujours une feuille
     }
 
     if(strcmp(titre, d->titre) < 0)
@@ -119,13 +116,14 @@ Discotheque arbre_inserer(Discotheque dvoid, Titre titre, Interprete interprete,
     return d;
 }
 
-/* Fonction : supprimer
- *            Supprime un unique album de la discothèque entrée en paramètre, tout en laissant la discothèque fonctionnelle.
- *
- * Arguments : dvoid - La discothèque dans laquelle supprimer l'album
- *             t - Un pointeur vers une chaîne de caractères correspondant au titre de l'album à supprimer
- *
- * Retourne : La discothèque denuée de l'album. Attention, la fonction ne duplique pas la discothèque initiale. Ainsi, parfois la discothèque initiale restera inchangée, parfois non.
+/* supprimer
+ * @brief Supprime un unique album de la discothèque entrée en paramètre, tout en laissant la discothèque fonctionnelle.
+ * @pre d et t doivent être dans des formats valides. Un album de titre t doit se trouver dans d.
+ * @post La discothèque retournée ne possède plus l'album de titre t, et est toujours fonctionnelle.
+ * @invariant Les autres albums contenus dans d sont invariants.
+ * @param dvoid La discothèque dans laquelle supprimer l'album
+ * @param t Un pointeur vers une chaîne de caractères correspondant au titre de l'album à supprimer
+ * @return La discothèque denuée de l'album
  */
 Discotheque arbre_supprimer(Discotheque dvoid, char * t)
 {
@@ -175,13 +173,14 @@ Discotheque arbre_supprimer(Discotheque dvoid, char * t)
     return d;
 }
 
-/* Fonction : rechercher_album
- *            Recherche un album dans une discothèque
- *
- * Arguments : dvoid - La discothèque dans laquelle rechercher l'album
- *             titre - Un pointeur vers une chaîne de caractères correspondant au titre de l'album à rechercher
- *
- * Retourne : La discothèque possédant l'album à sa racine.
+/* rechercher_album
+ * @brief Recherche un album dans une discothèque
+ * @pre d et t doivent être dans des formats valides.
+ * @post La fonction retourne les éléments descriptifs de l'album de titre t contenu dans d. Elle retourne une constante définie comme nulle si il n'y a pas d'album de titre t dans d.
+ * @invariant La discothèque entière ne change pas.
+ * @param dvoid La discothèque dans laquelle rechercher l'album
+ * @param titre Un pointeur vers une chaîne de caractères correspondant au titre de l'album à rechercher
+ * @return La discothèque possédant l'album à sa racine ou NULL si l'album n'est pas trouvé
  */
 Discotheque arbre_rechercher(Discotheque dvoid, char * titre)
 {
@@ -203,12 +202,13 @@ int arbre_album_present(Discotheque d){
     return d != NULL;
 }
 
-/* Fonction : compter_interpretes
- *            Cherche le nombre d'interpretes uniques dans la discothèque entrée en paramètre
- *
- * Arguments : d - La discothèque dans laquelle compter les interprêtes
- *
- * Retourne : Le nombre d'inteprêtes uniques de la discothèque
+/* compter_interpretes
+ * @brief Cherche le nombre d'interpretes uniques dans la discothèque entrée en paramètre
+ * @pre d doit être dans un format valide.
+ * @post La fonction retourne le nombre entier d'artistes uniques des différents albums de d.
+ * @invariant La discothèque d ne varie pas.
+ * @param d La discothèque dans laquelle compter les interprêtes
+ * @return Le nombre d'inteprêtes uniques de la discothèque
  */
 int arbre_compter_interpretes(Discotheque d)
 {
@@ -219,14 +219,12 @@ int arbre_compter_interpretes(Discotheque d)
     return nb;
 }
 
-/* Fonction : compter_interpretes_rec
- *            Cherche le nombre d'interpretes uniques dans la discothèque entrée en paramètre après les avoir comparés à une liste. Fonctionne de manière récursive.
- *
- * Arguments : dvoid - La discothèque dans laquelle compter les interprêtes
- *             pl - Un pointeur vers une liste contenant les noms des interprêtes déjà comptés
- *             pIncr - Un pointeur vers un entier contenant le nombre de noeuds déjà traités
- *
- * Retourne : Le nombre d'inteprêtes uniques de la discothèque
+/* compter_interpretes_rec
+ * @brief Cherche le nombre d'interpretes uniques dans la discothèque entrée en paramètre après les avoir comparés à une liste. Fonctionne de manière récursive.
+ * @param dvoid La discothèque dans laquelle compter les interprêtes
+ * @param pl Un pointeur vers une liste contenant les noms des interprêtes déjà comptés
+ * @param pIncr Un pointeur vers un entier contenant le nombre de noeuds déjà traités
+ * @return Le nombre d'inteprêtes uniques de la discothèque
  */
 int arbre_compter_interpretes_rec(Discotheque dvoid, mlist_t** pl, int * pIncr)
 {
@@ -248,10 +246,12 @@ int arbre_compter_interpretes_rec(Discotheque dvoid, mlist_t** pl, int * pIncr)
     return nb;
 }
 
-/* Fonction : detruire_discotheque
- *            Supprime complètement la discothèque de la mémoire
- *
- * Arguments : dvoid - La discothèque à supprimer
+/* detruire_discotheque
+ * @brief Supprime complètement la discothèque de la mémoire
+ * @pre La discothèque d doit être dans un format valide
+ * @post La discothèque d disparaît de la mémoire
+ * @invariant Aucun
+ * @param dvoid La discothèque à supprimer
  */
 void arbre_detruire_discotheque(Discotheque dvoid)
 {
@@ -264,10 +264,9 @@ void arbre_detruire_discotheque(Discotheque dvoid)
     }
 }
 
-/* Fonction : detruire_album
- *            Supprime seulement un album de la mémoire, sans prendre en compte les eventuels enfants de la discothèque
- *
- * Arguments : dvoid - La discothèque à supprimer
+/* detruire_album
+ * @brief Supprime seulement un album de la mémoire, sans prendre en compte les eventuels enfants de la discothèque
+ * @param dvoid La discothèque à supprimer
  */
 void arbre_detruire_album(Discotheque dvoid)
 {
