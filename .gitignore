@@ -4,3 +4,4 @@ databases/*
 *.sw*
 **/*.sw*
 *vgcore*
+*.tar.gz
