@@ -11,6 +11,7 @@ typedef struct {
 
     float load_factor;
     float max_load_factor;
+    float min_load_factor;
 
     void (*destructor)(char*, void*);
 
