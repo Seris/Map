@@ -51,7 +51,7 @@ int map_set(map_t* map, char* key, void* value){
             mlist_add(&map->table[pos], key, value);
             map->elem_count++;
 
-            map->load_factor = map->elem_count / map->table_size;
+            map->load_factor = ((float) map->elem_count) / map->table_size;
 
             if(map->load_factor > map->max_load_factor){
                 map_set_table_size(map, (float) map->table_size * 1.2 + 1);
@@ -82,18 +82,26 @@ void* map_get(map_t* map, char* key){
 }
 
 
-void* map_unset(map_t* map, char* key){
+int map_unset(map_t* map, char* key){
     int pos = map_default_hash(key, map->table_size);
-    void* value = NULL;
+    int result = 0;
 
     mlist_t *child = map->table[pos];
     mlist_t *parent = NULL;
-    while(value == NULL && child != NULL){
+    while(result == 0 && child != NULL){
         if(strcmp(key, child->key) == 0){
-            value = child->value;
+            if(map->destructor != NULL){
+                map->destructor(child->key, child->value);
+            }
+
             if(parent != NULL){
                 parent->next = child->next;
+            } else {
+                map->table[pos] = NULL;
             }
+
+            result = 1;
+
             free(child);
         } else {
             parent = child;
@@ -101,7 +109,7 @@ void* map_unset(map_t* map, char* key){
         }
     }
 
-    return value;
+    return result;
 }
 
 

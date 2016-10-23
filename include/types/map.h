@@ -23,7 +23,7 @@ map_t*  map_new(int initial_size);
 int     map_del(map_t* map);
 int     map_set(map_t* map, char* key, void* value);
 void*   map_get(map_t* map, char* key);
-void*   map_unset(map_t* map, char* key);
+int     map_unset(map_t* map, char* key);
 
 int     map_set_destructor(map_t* map, void (*delete)(char*, void*));
 int     map_set_table_size(map_t* map, int nsize);

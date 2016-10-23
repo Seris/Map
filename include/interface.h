@@ -5,9 +5,9 @@
 
 void effEcr();
 
-void saisie(char * chaine, int longueur_max);
+void saisie(const char* prompt, char* chaine, int longueur_max);
 
-int saisieNb(char * chaine, int longueur_max);
+int saisieNb();
 
 void lancer_interface();
 

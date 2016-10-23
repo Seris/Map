@@ -7,11 +7,13 @@
 #include <types/disco.h>
 
 void hash_destructor(char* key, void* m);
+void hash_display_music(music_t* music);
 
 
 Discotheque hash_creer_discotheque(){
     map_t* disco = map_new(0);
     map_set_destructor(disco, &hash_destructor);
+
     return disco;
 }
 
@@ -23,14 +25,16 @@ void hash_detruire_discotheque(Discotheque d){
 
 Discotheque hash_inserer(Discotheque disco, Titre t, Interprete i, Label l, Date d, Style s){
     music_t* music = malloc(sizeof(music_t));
-    
+
     music->title  = strdup(t);
     music->author = strdup(i);
     music->label  = strdup(l);
     music->date   = strdup(d);
     music->style  = strdup(s);
 
-    map_set(disco, music->title, music);
+    if(!map_set(disco, music->title, music)){
+        hash_destructor(music->title, music);
+    }
 
     return disco;
 }
@@ -43,36 +47,34 @@ Discotheque hash_supprimer(Discotheque disco, Titre t){
 
 
 Discotheque hash_rechercher(Discotheque d, Titre t){
-    Discotheque result = hash_creer_discotheque();
-    map_set_table_size(result, 1);
+    map_t* disco = hash_creer_discotheque();
     music_t* music = map_get(d, t);
+    
+    disco->max_load_factor = 1;
+    map_set_table_size(disco, 1);
 
     if(music != NULL){
-        hash_inserer(result, music->title, music->author, music->label, music->date, music->style);
+        hash_inserer(disco,
+            music->title, music->author, music->label, music->date, music->style);
+        disco->table[0]->key = strdup("__selected__");
     }
 
-    return result;
+    return disco;
 }
 
-void hash_display_music(music_t* music){
-    printf("%s :\n", music->title);
-    printf("* Interprete: %s\n", music->author);
-    printf("* Label:      %s\n", music->label);
-    printf("* Style:      %s\n", music->style);
-    printf("* Date:       %s\n", music->date);
-}
 
 void hash_afficher_album(Discotheque d){
-    map_t* map = d;
-    if(map->table_size == 1){
-        if(map->table[0] != NULL){
-            hash_display_music(map->table[0]->value);
-        }
-    } else {
-        fprintf(stderr, "afficher_album: Ce n'est pas un album mais une discothèque complète\n");
-        exit(EXIT_FAILURE);
+    music_t* music = map_get(d, "__selected__");
+    if(music != NULL){
+        hash_display_music(music);
     }
 }
+
+
+int hash_album_present(Discotheque d){
+    return map_get(d, "__selected__") != NULL;
+}
+
 
 void hash_afficher(Discotheque d){
     map_t* map = d;
@@ -83,7 +85,6 @@ void hash_afficher(Discotheque d){
             hash_display_music(list->value);
             list = list->next;
         }
-        printf("---------------\n");
     }
 }
 
@@ -112,6 +113,9 @@ int hash_compter_interpretes(Discotheque d){
 
 void hash_destructor(char* key, void* m){
     music_t* music = (music_t*) m;
+    if(music->title != key){
+        free(key);
+    }
     free(music->title);
     free(music->author);
     free(music->label);
@@ -119,4 +123,13 @@ void hash_destructor(char* key, void* m){
     free(music->style);
     free(music);
 }
+
+void hash_display_music(music_t* music){
+    printf("%s :\n", music->title);
+    printf("* Interprete: %s\n", music->author);
+    printf("* Label:      %s\n", music->label);
+    printf("* Style:      %s\n", music->style);
+    printf("* Date:       %s\n", music->date);
+}
+
 

@@ -9,10 +9,11 @@ Discotheque (*creer_discotheque)(void);
 Discotheque (*inserer)(Discotheque, Titre, Interprete, Label, Date, Style);
 Discotheque (*supprimer)(Discotheque, Titre);
 Discotheque (*rechercher)(Discotheque, Titre);
+int         (*album_present)(Discotheque);
 int         (*compter_interpretes)(Discotheque);
 void        (*afficher)(Discotheque);
+void        (*afficher_album)(Discotheque);
 void        (*detruire_discotheque)(Discotheque);
-
 
 int discotheque_methode(methode_t method){
     int status = 1;
@@ -23,6 +24,8 @@ int discotheque_methode(methode_t method){
         supprimer               = &hash_supprimer;
         rechercher              = &hash_rechercher;
         compter_interpretes     = &hash_compter_interpretes;
+        album_present           = &hash_album_present;
+        afficher_album          = &hash_afficher_album;
         afficher                = &hash_afficher;
         detruire_discotheque    = &hash_detruire_discotheque;
         break;
@@ -33,7 +36,9 @@ int discotheque_methode(methode_t method){
         supprimer               = &arbre_supprimer;
         rechercher              = &arbre_rechercher;
         compter_interpretes     = &arbre_compter_interpretes;
+        album_present           = &arbre_album_present;
         afficher                = &arbre_afficher;
+        afficher_album          = &arbre_afficher;
         detruire_discotheque    = &arbre_detruire_discotheque;
         break;
 
@@ -43,6 +48,7 @@ int discotheque_methode(methode_t method){
         supprimer               = &liste_supprimer;
         rechercher              = &liste_rechercher;
         compter_interpretes     = &liste_compter_interpretes;
+        album_present           = &arbre_album_present;
         afficher                = &liste_afficher;
         detruire_discotheque    = &liste_detruire_discotheque;
         break;

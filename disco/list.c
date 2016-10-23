@@ -115,3 +115,8 @@ void liste_afficher(Discotheque d){
     }
 }
 
+void liste_afficher_album(Discotheque d){
+    if(d != NULL){
+        
+    }
+}

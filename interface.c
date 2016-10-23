@@ -6,6 +6,7 @@
 #include <types/tree.h>
 #include <interface.h>
 
+#define vide_stdin() char __c; while( (__c = getchar()) != EOF && __c != '\n');
 
 /*
  * Fonction : effEcr
@@ -18,7 +19,7 @@ void effEcr()
     #elif defined __MINGW32__ || defined __WIN32__
         system("cls");
     #else
-        for(int i = 0; i < 20; i++) printf("\n");
+        for(int i = 0; i < 40; i++) printf("\n");
     #endif
 }
 
@@ -29,14 +30,19 @@ void effEcr()
  * Arguments : chaine - Un pointeur vers la chaîne de caractères dans laquelle écrire
  *             longueur_max - La longueur maximale de la chaîne
  */
-void saisie(char * chaine, int longueur_max)
-{
-    fgets(chaine, longueur_max, stdin); // La fonction miracle
-    int i;
-    for(i = 0; i < longueur_max; i++) // Suppression du '\n'
-    {
-        if(chaine[i] == '\n')
-            chaine[i] = '\0';
+void saisie(const char* prompt, char * chaine, int longueur_max){
+    int len;
+    printf("%s ", prompt);
+    fgets(chaine, longueur_max, stdin);
+    
+    len = strlen(chaine);
+    
+    for(int i = 0; i < len; i++){
+        if(chaine[i] == '\r' || chaine[i] == '\n') chaine[i] = 0;
+    }
+    
+    if(len == longueur_max - 1){
+        vide_stdin();
     }
 }
 
@@ -49,153 +55,154 @@ void saisie(char * chaine, int longueur_max)
  *
  * Retourne : Le nombre entier saisi, ou 0 si c'est du texte qui est entré
  */
-int saisieNb(char * chaine, int longueur_max)
-{
-    saisie(chaine, longueur_max);
-    return strtol(chaine, NULL, 10);
+int saisieNb(const char* prompt){
+    int n;
+    int result = 0;
+
+    char buf[10];
+
+    while(result != 1){
+        saisie(prompt, buf, 10);
+        result = sscanf(buf, "%d", &n);
+        if(result != 1){
+            printf("Entrée invalide\n");
+        }
+    }
+
+    return n;
 }
 
 
-void lancer_interface()
-{
+void lancer_interface(){
     int implementation = 0;
-    char titre[100] = {'\0'};
 
-    printf("Quel mode d'implementation utiliser ?\n1. Listes chainees\n2. Arbres binaires de recherche\n3. Tables de hachage\n\n");
-    do
-    {
-        implementation = 0;
-        printf("--> ");
-        implementation = saisieNb(titre, 2);
-    }
-    while(implementation <= 0 || implementation >= 3);
-    printf("\n");
+    printf("Quel mode d'implementation utiliser ?\n"
+           "1. Listes chainees\n"
+           "2. Arbres binaires de recherche\n"  
+           "3. Tables de hachage\n");
 
-    switch(implementation){
-        case 1:
-        discotheque_methode(METHODE_LISTE);
-        break;
-
-        case 2:
-        discotheque_methode(METHODE_ARBRE);
-        break;
-
-        case 3:
-        discotheque_methode(METHODE_HASH);
-        break;
-    }
+    do {
+        implementation = saisieNb(">");
+    } while(implementation <= 0 || implementation > 3);
+    discotheque_methode(implementation);
 
     Discotheque d = creer_discotheque();
 
-    char interprete[100] = {'\0'},
-         label[100] = {'\0'},
-         date[100] = {'\0'},
-         style[100] = {'\0'};
+    char titre[100]      = "",
+         interprete[100] = "",
+         label[100]      = "",
+         date[100]       = "",
+         style[100]      = "",
+         buffer[100]     = "";
 
     int boucle = 1;
     int choix = 0;
 
-    while(boucle == 1)
-    {
+    while(boucle == 1){
         effEcr();
-        printf("\n----- Menu principal -----\n\n");
-        printf("01. Afficher la discotheque actuelle\n02. Charger la base de donnees melangee\n03. Charger la base de donnees reduite\n04. Charger la base de donnees triee\n");
-        printf("05. Inserer un album\n06. Supprimer un album\n07. Rechercher un album\n08. Compter les interpretes de la discotheque\n09. Detruire la discotheque\n10. Quitter\n\n");
+        printf("----- Menu principal -----\n"
+               "1. Afficher la discotheque actuelle\n"
+               "2. Charger un fichier\n"
+               "3. Insérer un album\n"
+               "4. Supprimer un album\n"
+               "5. Rechercher un album\n"
+               "6. Compter les interpretes de la discotheque\n"  
+               "7. Detruire la discotheque\n"  
+               "8. Quitter\n");
 
-        do
-        {
-            choix = 0;
-            printf("--> ");
-            choix = saisieNb(titre, 3);
-        }
-        while(choix <= 0 || choix > 3);
+        do {
+            choix = saisieNb(">");
+        } while(choix <= 0 || choix > 10);
         printf("\n");
 
-        switch(choix)
-        {
+        switch(choix) {
             case 1:
-            printf("Affichage de la discothèque :\n");
+            printf("Affichage de la discothèque: \n");
             afficher(d);
-            printf("\n");
             break;
 
             case 2:
-            charger_discotheque_fichier("./databases/bigger.dat", &d);
+            saisie("Chemin vers le fichier:", buffer, 100);
+            printf("Chargement du fichier... ");
+            if(charger_discotheque_fichier(buffer, &d)){
+                printf("Terminé\n");
+            } else {
+                printf("\nLe fichier n'existe pas !\n");
+            }
             break;
             
             case 3:
-            charger_discotheque_fichier("./databases/test.dat", &d);
+            do {
+                saisie("Nom:", titre, 100);
+                saisie("Interprète:", interprete, 100);
+                saisie("Label:", label, 100);
+                saisie("Date:", date, 100);
+                saisie("Style:", style, 100);
+
+                effEcr();
+                printf("Nouveau album: %s | %s | %s | %s | %s\n\n",
+                        titre, interprete, label, date, style);
+
+                saisie("Insérer ([O]ui, [N]on, [A]nnuler) [O] ?", buffer, 100);
+            } while(buffer[0] == 'N');
+           
+            if(buffer[0] == 'O' || buffer[0] == 0){
+                d = inserer(d, titre, interprete, label, date, style);
+                printf("Insertion réussi\n");
+            } else {
+                printf("Le titre n'a pas été inséré\n");
+            }
             break;
 
             case 4:
-            charger_discotheque_fichier("./databases/big.dat", &d);
+            saisie("Entrez le nom de l'album à supprimer:", titre, 100);
+            printf("Recherche de '%s' en cours...\n", titre);
+
+            Discotheque resultat = rechercher(d, titre);
+            if(album_present(resultat)){
+                afficher_album(resultat);
+                d = supprimer(d, titre);
+                printf("Album supprimé\n");
+            } else {
+                printf("L'album n'a pas ete trouve.\n");
+            }
+            detruire_discotheque(resultat);
             break;
 
             case 5:
-            printf("Nom : "); saisie(titre, 100);
-            printf("Interprete : "); saisie(interprete, 100);
-            printf("Label : "); saisie(label, 100);
-            printf("Date : "); saisie(date, 100);
-            printf("Style : "); saisie(style, 100);
+            saisie("Nom:", titre, 100);
+            printf("Recherche de '%s' en cours...\n", titre);
 
-            printf("Vous avez entre : %s | %s | %s | %s | %s\n", titre, interprete, label, date, style);
-
-            if(implementation == 1);
-            else if(implementation == 2)
-                d = inserer(d, titre, interprete, label, date, style);
-            else;
-
+            Discotheque drecherche = rechercher(d, titre);
+            if(album_present(drecherche)){
+                afficher_album(drecherche);
+            } else {
+                printf("L'album n'a pas ete trouve.\n");
+            }
+            detruire_discotheque(drecherche);
             break;
 
             case 6:
-            printf("Entrez le nom de l'album à supprimer : ");
-            saisie(titre, 100);
-            printf("Recherche de \'%s\' en cours...\n", titre);
-
-            if(rechercher(d, titre) == NULL)
-                printf("L'album n'a pas ete trouve.\n");
-            else
-            {
-                d = supprimer(d, titre);
-                printf("Album supprime.\n");
-            }
-
-            break;
-
-            case 7:
-
-            printf("Nom :");
-            saisie(titre, 100);
-            printf("Recherche de \'%s\' en cours...\n", titre);
-
-            Discotheque drecherche = rechercher(d, titre);
-
-            if(drecherche == NULL)
-                printf("L'album n'a pas ete trouve.\n");
-
-            break;
-
-            case 8:
             printf("Il y a %d interpretes.\n", compter_interpretes(d));
             break;
 
-            case 10:
+            case 8:
             boucle = 0;
-            case 9:
+            case 7:
             printf("Destruction de la discotheque en cours...\n");
             detruire_discotheque(d);
+            
             printf("Creation d'une discotheque vide en cours...\n");
             d = creer_discotheque();
             printf("Termine.\n");
             break;
         }
 
-        printf("Appuyez sur Entrée pour continuer\n");
-        if(boucle != 0)
-        {
-            getchar();
+        if(boucle != 0){
+            saisie("\nAppuyez sur Entrée pour continuer", buffer, 1);
         }
     }
 
     detruire_discotheque(d);
 }
+

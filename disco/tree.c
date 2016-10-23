@@ -187,22 +187,20 @@ Discotheque arbre_rechercher(Discotheque dvoid, char * titre)
 {
     struct NoeudSt * d = (struct NoeudSt *)dvoid;
 
-    if(d == NULL)
-    {
+    if(d == NULL) {
         return NULL;
-    }
-    else if(strcmp(titre, d->titre) < 0)
-    {
+    } else if(strcmp(titre, d->titre) < 0) {
         return arbre_rechercher(d->fils_g, titre);
-    }
-    else if(strcmp(titre, d->titre) > 0)
-    {
+    } else if(strcmp(titre, d->titre) > 0){
         return arbre_rechercher(d->fils_d, titre);
+    } else {
+        return arbre_inserer(arbre_creer_discotheque(),
+            d->titre, d->interprete, d->label, d->date, d->style);
     }
-    else
-    {
-        return d;
-    }
+}
+
+int arbre_album_present(Discotheque d){
+    return d != NULL;
 }
 
 /* Fonction : compter_interpretes
@@ -284,4 +282,9 @@ void arbre_detruire_album(Discotheque dvoid)
     free(d->date);
     free(d->style);
     free(d);
+}
+
+int arbre_est_vide(Discotheque d)
+{
+    return (d == NULL);
 }
