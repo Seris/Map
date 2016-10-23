@@ -15,6 +15,17 @@ void        (*afficher)(Discotheque);
 void        (*afficher_album)(Discotheque);
 void        (*detruire_discotheque)(Discotheque);
 
+
+/**
+ * discotheque_methode
+ * @desc Initialise les méthodes de la discothèque. Cette fonction ne devrait
+ *       s'exécuter qu'une seule fois au début du programme car elle modifie
+ *       des variables globales.
+ *       Cette fonction doit bien entendu être lancé avant l'exécution des
+ *       méthodes de la discothèque.
+ * @param <methode_t methode> 
+ * @return 1 si la méthode a bien été mis en place, 0 sinon
+ **/
 int discotheque_methode(methode_t method){
     int status = 1;
     switch(method){
@@ -62,7 +73,16 @@ int discotheque_methode(methode_t method){
 }
 
 
-int charger_discotheque_fichier(char* file, Discotheque* d){
+/**
+ * charger_discotheque_fichier
+ * @desc Charge dans la discothèque les albums stockés dans le fichier sous la
+ *       forme : "titre|interprete|label|date|style". Les albums sont délimités
+ *       par un passage à la ligne.
+ * @param @invariant <const char* file>
+ * @param <Discotheque* d>
+ * @return 1 en cas de succès. 0 si le fichier n'existe pas
+ **/
+int charger_discotheque_fichier(const char* file, Discotheque* d){
     FILE* db_fd = fopen(file, "r"); 
     char* line;
     music_t music;
