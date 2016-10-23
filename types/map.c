@@ -20,7 +20,7 @@ map_t* map_new(int size){
     map->table_size = 0;
     map->load_factor = 0;
     map->max_load_factor = 0.75;
-    map->min_load_factor = 0.5;
+    map->min_load_factor = 0.6;
     map->destructor = NULL;
 
     map_set_table_size(map, 
