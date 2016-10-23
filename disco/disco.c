@@ -49,6 +49,7 @@ int discotheque_methode(methode_t method){
         rechercher              = &liste_rechercher;
         compter_interpretes     = &liste_compter_interpretes;
         album_present           = &arbre_album_present;
+        afficher_album          = &liste_afficher;
         afficher                = &liste_afficher;
         detruire_discotheque    = &liste_detruire_discotheque;
         break;
