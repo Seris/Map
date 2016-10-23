@@ -118,11 +118,13 @@ void lancer_interface(){
         effEcr();
  
         switch(choix) {
+            // Affichage de la discothèque
             case 1:
             printf("Affichage de la discothèque: \n");
             afficher(d);
             break;
 
+            // Charger un fichier
             case 2:
             saisie("Chemin vers le fichier:", buffer, 100);
             printf("Chargement du fichier... ");
@@ -134,6 +136,7 @@ void lancer_interface(){
             }
             break;
             
+            // Insérer un album
             case 3:
             do {
                 saisie("Nom:", titre, 100);
@@ -157,6 +160,7 @@ void lancer_interface(){
             }
             break;
 
+            // Supprimer un album
             case 4:
             saisie("Entrez le nom de l'album à supprimer:", titre, 100);
             printf("Recherche de '%s' en cours...\n", titre);
@@ -164,14 +168,20 @@ void lancer_interface(){
             Discotheque resultat = rechercher(d, titre);
             if(album_present(resultat)){
                 afficher_album(resultat);
-                d = supprimer(d, titre);
-                printf("Album supprimé\n");
+                saisie("Confirmer la suppression (O/n) [n] :", buffer, 100);
+                if(buffer[0] == 'O'){
+                    d = supprimer(d, titre);
+                    printf("Album supprimé\n");
+                } else {
+                    printf("Suppression annulée\n");
+                }
             } else {
-                printf("L'album n'a pas ete trouve.\n");
+                printf("L'album n'a pas ete trouvé.\n");
             }
             detruire_discotheque(resultat);
             break;
 
+            // Rechercher un album
             case 5:
             saisie("Nom:", titre, 100);
             printf("Recherche de '%s' en cours...\n", titre);
@@ -185,12 +195,16 @@ void lancer_interface(){
             detruire_discotheque(drecherche);
             break;
 
+            // Compter le nombre d'interprètes
             case 6:
             printf("Il y a %d interpretes.\n", compter_interpretes(d));
             break;
 
+            // Quitter
             case 8:
             boucle = 0;
+
+            // Détruire la discothèque
             case 7:
             printf("Destruction de la discotheque en cours...\n");
             detruire_discotheque(d);
